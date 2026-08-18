@@ -2,15 +2,14 @@
 
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { useMounted } from '@/lib/use-mounted'
 import { cn } from '@/lib/utils'
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  const mounted = useMounted()
 
-  const isDark = resolvedTheme === 'dark'
+  const isDark = mounted && resolvedTheme === 'dark'
 
   return (
     <button
@@ -21,8 +20,9 @@ export function ThemeToggle({ className }: { className?: string }) {
         className,
       )}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      suppressHydrationWarning
     >
-      {mounted && isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
+      {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
     </button>
   )
 }

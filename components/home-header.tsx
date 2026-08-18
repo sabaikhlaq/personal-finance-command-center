@@ -2,6 +2,7 @@
 
 import { MaskToggle } from '@/components/mask-toggle'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { useMounted } from '@/lib/use-mounted'
 
 const USER_NAME = 'Zohaib'
 
@@ -14,15 +15,15 @@ function greeting(): string {
 }
 
 export function HomeHeader() {
+  const mounted = useMounted()
+
   return (
     <header className="mb-6 flex items-center justify-between">
       <div>
-        <p className="text-sm text-muted-foreground">{greeting()},</p>
+        <p className="text-sm text-muted-foreground" suppressHydrationWarning>
+          {mounted ? greeting() : 'Welcome'}
+        </p>
         <h1 className="text-2xl font-semibold tracking-tight">{USER_NAME}</h1>
-      </div>
-      <div className="flex items-center gap-2">
-        <MaskToggle />
-        <ThemeToggle />
       </div>
     </header>
   )

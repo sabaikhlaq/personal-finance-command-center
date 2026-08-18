@@ -4,13 +4,17 @@ import Link from 'next/link'
 import { useFinance } from '@/components/finance-provider'
 import { MoneyText } from '@/components/money-text'
 import { categoryMeta } from '@/lib/categories'
+import { useMounted } from '@/lib/use-mounted'
 
 export function SpendSummary() {
   const { monthSpend, categoryTotals, masked } = useFinance()
+  const mounted = useMounted()
   const top = categoryTotals.slice(0, 4)
   const max = top[0]?.total ?? 1
 
-  const monthName = new Date().toLocaleDateString('en-PK', { month: 'long' })
+  const monthName = mounted
+    ? new Date().toLocaleDateString('en-PK', { month: 'long' })
+    : 'this month'
 
   return (
     <Link
@@ -18,7 +22,9 @@ export function SpendSummary() {
       className="block rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/40"
     >
       <div className="flex items-baseline justify-between">
-        <p className="text-sm text-muted-foreground">Spent in {monthName}</p>
+        <p className="text-sm text-muted-foreground" suppressHydrationWarning>
+          Spent in {monthName}
+        </p>
         <MoneyText amount={monthSpend} masked={masked} className="text-xl font-semibold" />
       </div>
 
